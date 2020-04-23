@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Slides from '../components/Slides'
 
 const SLIDE_DATA = [
@@ -6,17 +6,13 @@ const SLIDE_DATA = [
     { text: 'dupa 2nd', color: '#03A9F4' }
 ]
 
-class WelcomeScreen extends Component {
-
-    onSlidesComplete = () => {
-        this.props.navigation.navigate('AuthScreen')
+function WelcomeScreen(props) {
+    const onSlidesComplete = () => {
+        props.navigation.navigate('AuthScreen')
     }
-
-    render() {
-        return (
-            <Slides data={SLIDE_DATA} onComplete={this.onSlidesComplete} />
-        )
-    }
+    return (
+        <Slides data={SLIDE_DATA} onComplete={onSlidesComplete} />
+    )
 }
 
 export default WelcomeScreen
