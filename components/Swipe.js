@@ -22,8 +22,6 @@ class Swipe extends Component {
 
   constructor(props) {
     super(props);
-    console.log("Props in Swipe constructor", props)
-
     const position = new Animated.ValueXY();
     const panResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -44,7 +42,7 @@ class Swipe extends Component {
     this.state = { panResponder, position, index: 0 };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(nextProps) {
     if (nextProps.data !== this.props.data) {
       this.setState({ index: 0 });
     }

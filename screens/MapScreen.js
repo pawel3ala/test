@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 class MapScreen extends Component {
 
     state = {
-        // mapLoaded: false,
+        mapLoaded: false,
         region: {
             longitude: -122,
             latitude: 37,
@@ -17,9 +17,9 @@ class MapScreen extends Component {
             latitudeDelta: 0.09
         }
     }
-    // componentDidMount() {
-    //     this.setState({ mapLoaded: true })
-    // }
+    componentDidMount() {
+        this.setState({ mapLoaded: true })
+    }
 
     onRegionChangeComplete = region => {
         this.setState({ region })
@@ -28,18 +28,17 @@ class MapScreen extends Component {
     onButtonPress = () => {
         this.props.fetchJobs(this.state.region, () => {
             this.props.navigation.navigate("deck")
-
         })
     }
 
     render() {
-        // if (!this.state.mapLoaded) {
-        //     return (
-        //         <View styel={{ flex: 1, justifyContent: 'center' }}>
-        //             <ActivityIndicator size="large" />
-        //         </View>
-        //     )
-        // }
+        if (!this.state.mapLoaded) {
+            return (
+                <View styel={{ flex: 1, justifyContent: 'center' }}>
+                    <ActivityIndicator size="large" />
+                </View>
+            )
+        }
         return (
             <View style={{ flex: 1 }}>
                 <MapView

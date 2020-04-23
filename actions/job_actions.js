@@ -47,7 +47,6 @@ export const likeJob = job => ({
 })
 
 export const clearLikedJobs = () => {
-    console.log(store.getState())
     return {
         type: DELETE_JOBS
     }
