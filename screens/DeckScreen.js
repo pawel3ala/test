@@ -1,17 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Text, Platform } from 'react-native';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import MapView from 'react-native-maps';
-import { Card, Button, Icon } from 'react-native-elements';
+import { Card, Button } from 'react-native-elements';
 import Swipe from '../components/Swipe';
 import * as actions from '../actions';
 
-class DeckScreen extends Component {
- 
-  renderCard(job) {
+const DeckScreen = (props) => {
+
+  const dispatch = useDispatch()
+  const jobs = useSelector(({ jobs }) => jobs)
+
+  function renderCard(job) {
     const initialRegion = {
-      longitude: job.longitude,
-      latitude: job.latitude,
+      longitude: job.longitude || -122,
+      latitude: job.latitude || 37,
       latitudeDelta: 0.045,
       longitudeDelta: 0.02
     };
@@ -22,10 +25,9 @@ class DeckScreen extends Component {
           <MapView
             scrollEnabled={false}
             style={{ flex: 1 }}
-            cacheEnabled={Platform.OS === 'android' ? true : false}
+            cacheEnabled={Platform.OS === 'android'}
             initialRegion={initialRegion}
-          >
-          </MapView>
+          />
         </View>
         <View style={styles.detailWrapper}>
           <Text>{job.company}</Text>
@@ -38,7 +40,7 @@ class DeckScreen extends Component {
     );
   }
 
-  renderNoMoreCards = () => {
+  const renderNoMoreCards = () => {
     return (
       <Card title="No More Jobs">
         <Button
@@ -46,26 +48,25 @@ class DeckScreen extends Component {
           large
           icon={{ name: 'my-location' }}
           backgroundColor="#03A9F4"
-          onPress={() => this.props.navigation.navigate('map')}
+          onPress={() => props.navigation.navigate('map')}
         />
       </Card>
     );
   }
 
-  render() {
-    return (
-      <View style={{ marginTop: 10 }}>
-        <Swipe
-          data={this.props.jobs}
-          renderCard={this.renderCard}
-          renderNoMoreCards={this.renderNoMoreCards}
-          onSwipeRight={job => this.props.likeJob(job)}
-          keyProp="jobkey"
-        />
-      </View>
-    );
-  }
+  return (
+    <View style={{ marginTop: 10 }}>
+      <Swipe
+        data={jobs}
+        renderCard={renderCard}
+        renderNoMoreCards={renderNoMoreCards}
+        onSwipeRight={job => dispatch(actions.likeJob(job))}
+        keyProp="jobkey"
+      />
+    </View>
+  );
 }
+export default DeckScreen
 
 const styles = {
   detailWrapper: {
@@ -74,9 +75,3 @@ const styles = {
     marginBottom: 10
   }
 };
-
-function mapStateToProps({ jobs }) {
-  return  {jobs} ;
-}
-
-export default connect(mapStateToProps, actions)(DeckScreen);
