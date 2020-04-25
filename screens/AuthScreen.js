@@ -1,38 +1,23 @@
-import React, { Component } from 'react'
-import { Text, View, AsyncStorage } from 'react-native'
-import { connect } from 'react-redux'
+import React, { useEffect } from 'react'
+import { View } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../actions'
 
-class AuthScreen extends Component {
+const AuthScreen = (props) => {
 
-    componentDidMount() {
-        this.props.facebookLogin()
-        // AsyncStorage.removeItem('fb_token')
-        this.onAuthComplete(this.props)
+    const dispatch = useDispatch()
+    const token = useSelector(({ auth }) => auth.token)
+
+    useEffect(() => {
+        if (!token) dispatch(actions.facebookLogin())
+    }, [])
+
+    if (token) {
+        props.navigation.navigate('Main')
     }
-
-    componentDidUpdate(nextProps) {
-        this.onAuthComplete(nextProps)
-
-    }
-
-    onAuthComplete(props) {
-        if (props.token) {
-            this.props.navigation.navigate('map')
-        }
-    }
-
-    render() {
-        return (
-            <View>
-                <Text> Auth </Text>
-            </View>
-        )
-    }
+    return (
+        <View />
+    )
 }
 
-function mapStateToProps({ auth }) {
-    return { token: auth.token }
-}
-
-export default connect(mapStateToProps, actions)(AuthScreen)
+export default AuthScreen
