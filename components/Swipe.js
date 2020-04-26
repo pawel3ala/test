@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import {
   View,
   Animated,
@@ -13,122 +14,107 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
 
-class Swipe extends Component {
-  static defaultProps = {
-    onSwipeRight: () => {},
-    onSwipeLeft: () => {},
-    keyProp: 'id'
-  }
+const SwipeFunctional = (props) => {
 
-  constructor(props) {
-    super(props);
-    const position = new Animated.ValueXY();
-    const panResponder = PanResponder.create({
+  const [position, setPosition] = useState(new Animated.ValueXY())
+  const [index, setIndex] = useState(0)
+  const [panResponder, _] = useState(
+    PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (event, gesture) => {
         position.setValue({ x: gesture.dx, y: gesture.dy });
       },
       onPanResponderRelease: (event, gesture) => {
         if (gesture.dx > SWIPE_THRESHOLD) {
-          this.forceSwipe('right');
+          forceSwipe('right');
         } else if (gesture.dx < -SWIPE_THRESHOLD) {
-          this.forceSwipe('left');
+          forceSwipe('left');
         } else {
-          this.resetPosition();
+          resetPosition();
         }
       }
-    });
+    })
+  )
 
-    this.state = { panResponder, position, index: 0 };
-  }
-
-  componentDidUpdate(nextProps) {
-    if (nextProps.data !== this.props.data) {
-      this.setState({ index: 0 });
-    }
-  }
-
-  componentDidUpdate() {
+  useEffect(() => {
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
     LayoutAnimation.spring();
-  }
+  }, [])
 
-  forceSwipe(direction) {
+  function forceSwipe(direction) {
     const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
-    Animated.timing(this.state.position, {
+    Animated.timing(position, {
       toValue: { x, y: 0 },
       duration: SWIPE_OUT_DURATION
-    }).start(() => this.onSwipeComplete(direction));
+    }).start(() => onSwipeComplete(direction));
   }
 
-  onSwipeComplete(direction) {
-    const { onSwipeLeft, onSwipeRight, data } = this.props;
-    const item = data[this.state.index];
+  function onSwipeComplete(direction) {
+    const {
+      onSwipeLeft: onSwipeLeft = () => { },
+      onSwipeRight: onSwipeRight = () => { },
+      data
+    } = props;
+    const item = data[index];
 
     direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
-    this.state.position.setValue({ x: 0, y: 0 });
-    this.setState({ index: this.state.index + 1 });
+    position.setValue({ x: 0, y: 0 });
+    setPosition(position)
+    setIndex(prevIndex => prevIndex + 1);
   }
 
-  resetPosition() {
-    Animated.spring(this.state.position, {
+  function resetPosition() {
+    Animated.spring(position, {
       toValue: { x: 0, y: 0 }
     }).start();
   }
 
-  getCardStyle() {
-    const { position } = this.state;
+  function getCardStyle() {
     const rotate = position.x.interpolate({
       inputRange: [-SCREEN_WIDTH * 1.5, 0, SCREEN_WIDTH * 1.5],
       outputRange: ['-120deg', '0deg', '120deg']
     });
-
     return {
       ...position.getLayout(),
       transform: [{ rotate }]
     };
   }
 
-  renderCards() {
-    if (this.state.index >= this.props.data.length) {
-      return this.props.renderNoMoreCards();
+  function renderCards() {    
+    if (index >= props.data.length) {
+      return props.renderNoMoreCards();
     }
 
-    const deck = this.props.data.map((item, i) => {
-      if (i < this.state.index) { return null; }
+    const deck = props.data.map((item, i) => {
+      if (i < index) { return null; }
 
-      if (i === this.state.index) {
+      if (i === index) {
         return (
           <Animated.View
-            key={item[this.props.keyProp]}
-            style={[this.getCardStyle(), styles.cardStyle, { zIndex: 99 }]}
-            {...this.state.panResponder.panHandlers}
+            key={item[props.keyProp]}
+            style={[getCardStyle(), styles.cardStyle, { zIndex: 99 }]}
+            {...panResponder.panHandlers}
           >
-            {this.props.renderCard(item)}
+            {props.renderCard(item)}
           </Animated.View>
         );
       }
-
       return (
         <Animated.View
-          key={item[this.props.keyProp]}
-          style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: -i }]}
+          key={item[props.keyProp]}
+          style={[styles.cardStyle, { top: 10 * (i - index), zIndex: -i }]}
         >
-          {this.props.renderCard(item)}
+          {props.renderCard(item)}
         </Animated.View>
       );
     });
-
     return Platform.OS === 'android' ? deck : deck.reverse();
   }
-
-  render() {
-    return (
-      <View>
-        {this.renderCards()}
-      </View>
-    );
-  }
+  return (
+    <View>
+      {renderCards()}
+    </View>
+  );
 }
 
 const styles = {
@@ -138,4 +124,4 @@ const styles = {
   }
 };
 
-export default Swipe;
+export default SwipeFunctional;
