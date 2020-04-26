@@ -1,20 +1,21 @@
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import React from 'react'
+import { View } from 'react-native'
 import { Button } from 'react-native-elements'
-import { connect } from 'react-redux'
-import { clearLikedJobs } from '../actions'
+import { useDispatch } from 'react-redux'
+import * as actions from '../actions'
 
-class SettingsScreen extends Component {
-    render() {
-        return (
-            <View>
-                <Button
-                    title="Delete liked jobs"
-                    onPress={clearLikedJobs}
-                />
-            </View>
-        )
-    }
+const SettingsScreen = (props) => {
+
+    const dispatch = useDispatch()
+
+    return (
+        <View>
+            <Button
+                title="Delete liked jobs"
+                onPress={() => dispatch(actions.clearLikedJobs)}
+            />
+        </View>
+    )
 }
 
-export default connect(null, { clearLikedJobs })(SettingsScreen)
+export default SettingsScreen
