@@ -1,64 +1,44 @@
-import React, { Component } from 'react'
-import { Text, View, ActivityIndicator } from 'react-native'
+import React, { useState } from 'react'
+import { View } from 'react-native'
 import { Button } from 'react-native-elements'
-import MapView from 'react-native-maps';
+import MapView from 'react-native-maps'
 import * as actions from '../actions'
+import { useDispatch } from 'react-redux'
 
-import { connect } from 'react-redux'
+ const MapScreen = (props) => {
 
-class MapScreen extends Component {
+    const dispatch = useDispatch()
+    const [region, setRegion] = useState({
+        longitude: -122,
+        latitude: 37,
+        longitudeDelta: 0.04,
+        latitudeDelta: 0.09
+    })
 
-    state = {
-        mapLoaded: false,
-        region: {
-            longitude: -122,
-            latitude: 37,
-            longitudeDelta: 0.04,
-            latitudeDelta: 0.09
-        }
-    }
-    componentDidMount() {
-        this.setState({ mapLoaded: true })
-    }
-
-    onRegionChangeComplete = region => {
-        this.setState({ region })
+    const onButtonPress = () => {
+        dispatch(actions.fetchJobs(region, () => {
+            props.navigation.navigate("deck")
+        }))
     }
 
-    onButtonPress = () => {
-        this.props.fetchJobs(this.state.region, () => {
-            this.props.navigation.navigate("deck")
-        })
-    }
-
-    render() {
-        if (!this.state.mapLoaded) {
-            return (
-                <View styel={{ flex: 1, justifyContent: 'center' }}>
-                    <ActivityIndicator size="large" />
-                </View>
-            )
-        }
-        return (
-            <View style={{ flex: 1 }}>
-                <MapView
-                    region={this.state.region}
-                    style={{ flex: 1 }}
-                    onRegionChangeComplete={this.onRegionChangeComplete}
+    return (
+        <View style={{ flex: 1 }}>
+            <MapView
+                region={region}
+                style={{ flex: 1 }}
+                onRegionChangeComplete={(region) => setRegion(region)}
+            />
+            <View style={styles.buttonContainer}>
+                <Button
+                    large
+                    title="Search"
+                    backgroundColor="#009688"
+                    icon={{ name: 'search' }}
+                    onPress={onButtonPress}
                 />
-                <View style={styles.buttonContainer}>
-                    <Button
-                        large
-                        title="Search"
-                        backgroundColor="#009688"
-                        icon={{ name: 'search' }}
-                        onPress={this.onButtonPress}
-
-                    />
-                </View>
             </View>
-        )
-    }
+        </View>
+    )
 }
 
 const styles = {
@@ -70,5 +50,4 @@ const styles = {
     }
 }
 
-
-export default connect(null, actions)(MapScreen)
+export default MapScreen
