@@ -1,41 +1,18 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Text, View, Linking, Platform } from 'react-native'
-import { connect } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Card, Button } from 'react-native-elements'
 import MapView from 'react-native-maps';
+import { useSelector } from 'react-redux';
 
-class ReviewScreen extends Component {
+const ReviewScreen = (props) => {
 
+    const likedJobs = useSelector(({ likedJobs }) => likedJobs)
+    
+    const renderLikedJobs = () => {
 
-    // static navigationOptions = {
-    //     title: 'Review Jobs',
-    //     tabBar: {
-    //         icon: ({ tintColor }) => {
-    //             return <Icon name="favorite" size={30} color={tintColor} />;
-    //         }
-    //     },
-    //     header: ({ navigate }) => {
-    //         return {
-    //             right: (
-    //                 <Button
-    //                     title="Settings"
-    //                     onPress={() => navigate('settings')}
-    //                     backgroundColor="rgba(0,0,0,0)"
-    //                     color="rgba(0, 122, 255, 1)"
-    //                 />
-    //             ),
-    //             style: {
-    //                 marginTop: Platform.OS === 'android' ? 24 : 0
-    //             }
-    //         };
-    //     }
-    // }
-
-
-    renderLikedJobs() {
         return (
-            this.props.likedJobs.map(job => {
+            likedJobs.map(job => {
                 const { company, formattedRelativeTime, url,
                     longitude, latitude, jobtitle, jobkey } = job
 
@@ -45,7 +22,6 @@ class ReviewScreen extends Component {
                     longitudeDelta: 0.04,
                     latitudeDelta: 0.09
                 }
-
                 return (
                     <Card title={jobtitle} key={jobkey}>
                         <View style={{ height: 200 }}>
@@ -54,8 +30,6 @@ class ReviewScreen extends Component {
                                 cacheEnabled={Platform.OS === 'android'}
                                 scrollEnabled={false}
                                 initialRegion={initialRegion}
-
-
                             />
                             <View style={styles.detailWrapper}>
                                 <Text style={styles.italics}>{company}</Text>
@@ -65,26 +39,19 @@ class ReviewScreen extends Component {
                                 title="Apply Now"
                                 backgroundColor="#03A9F4"
                                 onPress={() => Linking.openURL(url)}
-                            >
-                            </Button>
+                            />
                         </View>
                     </Card>
                 )
-
             })
         )
-
     }
-
-    render() {
-        return (
-            <ScrollView>
-                {this.renderLikedJobs()}
-            </ScrollView>
-        )
-    }
+    return (
+        <ScrollView>
+            {renderLikedJobs()}
+        </ScrollView>
+    )
 }
-
 const styles = {
     italics: {
         fontStyle: 'italic'
@@ -96,12 +63,5 @@ const styles = {
         justifyContent: 'space-around'
 
     }
-
 }
-
-const mapStateToProps = state => {
-    return { likedJobs: state.likedJobs }
-}
-
-
-export default connect(mapStateToProps)(ReviewScreen)
+export default ReviewScreen
