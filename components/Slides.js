@@ -4,50 +4,48 @@ import { Button } from 'react-native-elements'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
-export default class Slides extends Component {
 
-    renderButtonOnLastSlide(index) {
-        if (index === this.props.data.length - 1) {
+const Slides = (props) => {
+
+    function renderButtonOnLastSlide(index) {
+        if (index === props.data.length - 1) {
             return (
                 <Button
                     title="Onwards"
                     buttonStyle={styles.buttonStyle}
                     textStyle={styles.textStyle}
-                    onPress={this.props.onComplete}
+                    onPress={props.onComplete}
                 >
                     GO
                 </Button>
             )
-
         }
     }
-
-    renderSlides() {
-
-        return this.props.data.map((slide, index) => {
+    function renderSlides() {
+        return props.data.map((slide, index) => {
             return (
                 <View
                     key={slide.text}
                     style={[styles.slideStyle, { backgroundColor: slide.color }]}
                 >
                     <Text style={styles.slideText}> {slide.text}</Text>
-                    {this.renderButtonOnLastSlide(index)}
+                    {renderButtonOnLastSlide(index)}
                 </View>
             )
         })
     }
-    render() {
-        return (
-            <ScrollView
-                horizontal
-                pagingEnabled
-                style={{ flex: 1 }}
-            >
-            {this.renderSlides()}
-            </ScrollView>
-        )
-    }
+    return (
+        <ScrollView
+            horizontal
+            pagingEnabled
+            style={{ flex: 1 }}
+        >
+            {renderSlides()}
+        </ScrollView>
+    )
 }
+
+export default  Slides;
 
 const styles = {
     slideStyle: {
