@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useEffect, useState, useMemo } from 'react';
+import useTraceUpdate from 'use-trace-update';
 import {
   View,
   Animated,
@@ -18,23 +18,21 @@ const SwipeFunctional = (props) => {
 
   const [position, setPosition] = useState(new Animated.ValueXY())
   const [index, setIndex] = useState(0)
-  const [panResponder, _] = useState(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (event, gesture) => {
-        position.setValue({ x: gesture.dx, y: gesture.dy });
-      },
-      onPanResponderRelease: (event, gesture) => {
-        if (gesture.dx > SWIPE_THRESHOLD) {
-          forceSwipe('right');
-        } else if (gesture.dx < -SWIPE_THRESHOLD) {
-          forceSwipe('left');
-        } else {
-          resetPosition();
-        }
+  const panResponder = useMemo(() => PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderMove: (event, gesture) => {
+      position.setValue({ x: gesture.dx, y: gesture.dy });
+    },
+    onPanResponderRelease: (event, gesture) => {
+      if (gesture.dx > SWIPE_THRESHOLD) {
+        forceSwipe('right');
+      } else if (gesture.dx < -SWIPE_THRESHOLD) {
+        forceSwipe('left');
+      } else {
+        resetPosition();
       }
-    })
-  )
+    }
+  }), []);
 
   useEffect(() => {
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -80,7 +78,8 @@ const SwipeFunctional = (props) => {
     };
   }
 
-  function renderCards() {    
+  function renderCards() {
+    console.log("rendering cards with index", index)
     if (index >= props.data.length) {
       return props.renderNoMoreCards();
     }
