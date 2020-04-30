@@ -1,6 +1,6 @@
 import { LIKE_JOB, DELETE_JOBS } from '../actions/types'
 import _ from 'lodash'
-import { REHYDRATE } from 'redux-persist/es/constants'
+import { REHYDRATE } from 'redux-persist/lib/constants'
 
 export default function (state = [], action) {
     switch (action.type) {

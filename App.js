@@ -5,8 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Provider } from 'react-redux'
-import store from './store'
-
+import configureStore from './store'
+import { PersistGate } from 'redux-persist/es/integration/react';
 import WelcomeScreen from './screens/WelcomeScreen'
 import AuthScreen from './screens/AuthScreen'
 import DeckScreen from './screens/DeckScreen'
@@ -33,7 +33,7 @@ const Main = () => {
 }
 
 
-const Review = ({navigation}) => {
+const Review = ({ navigation }) => {
 
   return (
     <Stack.Navigator>
@@ -62,15 +62,20 @@ const Review = ({navigation}) => {
 
 
 export default function App() {
+
+  const { persistor, store } = configureStore()
+  
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="WelcomeScreen" component={WelcomeScreen} />
-          <Tab.Screen name="AuthScreen" component={AuthScreen} />
-          <Tab.Screen name="Main" component={Main} />
-        </Tab.Navigator>
-      </NavigationContainer>
+      <PersistGate persistor={persistor}>
+        <NavigationContainer>
+          <Tab.Navigator>
+            <Tab.Screen name="WelcomeScreen" component={WelcomeScreen} />
+            <Tab.Screen name="AuthScreen" component={AuthScreen} />
+            <Tab.Screen name="Main" component={Main} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </PersistGate>
     </Provider>
   );
 }
