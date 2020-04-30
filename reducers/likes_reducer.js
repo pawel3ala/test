@@ -1,8 +1,11 @@
 import { LIKE_JOB, DELETE_JOBS } from '../actions/types'
 import _ from 'lodash'
+import { REHYDRATE } from 'redux-persist/es/constants'
 
 export default function (state = [], action) {
     switch (action.type) {
+        case REHYDRATE:
+            return action.payload.likedJob || []
         case DELETE_JOBS:
             return []
         case LIKE_JOB:
@@ -10,4 +13,4 @@ export default function (state = [], action) {
         default:
             return state
     }
-} 
+}
