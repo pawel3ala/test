@@ -1,3 +1,4 @@
+import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import WelcomeScreen from '../screens/WelcomeScreen'
 import AuthScreen from '../screens/AuthScreen'

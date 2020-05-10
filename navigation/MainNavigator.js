@@ -1,3 +1,5 @@
+
+import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MapScreen from '../screens/MapScreen'
 import DeckScreen from '../screens/DeckScreen'
