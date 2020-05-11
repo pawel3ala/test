@@ -7,13 +7,13 @@ import MainNavigator from './MainNavigator'
 const Tab = createBottomTabNavigator()
 
 const SubNavigator = () => {
-    return (
-        <Tab.Navigator>
-        <Tab.Screen name="WelcomeScreen" component={WelcomeScreen} />
-        <Tab.Screen name="AuthScreen" component={AuthScreen} />
-        <Tab.Screen name="Main" component={MainNavigator} />
-      </Tab.Navigator>
-    )
+  return (
+    <Tab.Navigator tabBarVisible={false}>
+      <Tab.Screen name="WelcomeScreen" component={WelcomeScreen} />
+      <Tab.Screen name="AuthScreen" component={AuthScreen} />
+      <Tab.Screen name="Main" component={MainNavigator} />
+    </Tab.Navigator>
+  )
 }
 
 export default SubNavigator
