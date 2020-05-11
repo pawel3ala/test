@@ -8,7 +8,7 @@ const Tab = createBottomTabNavigator()
 
 const SubNavigator = () => {
   return (
-    <Tab.Navigator tabBarVisible={false}>
+    <Tab.Navigator screenOptions={{ tabBarVisible: false }}>
       <Tab.Screen name="WelcomeScreen" component={WelcomeScreen} />
       <Tab.Screen name="AuthScreen" component={AuthScreen} />
       <Tab.Screen name="Main" component={MainNavigator} />
