@@ -17,7 +17,7 @@
     "expo-facebook": "~8.1.0",
     "latlng": "^1.0.0",
     "latlng-to-zip": "0.0.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "qs": "^6.9.3",
     "react": "16.11.0",
     "react-dom": "16.9.0",
