@@ -18,7 +18,7 @@
     "latlng": "^1.0.0",
     "latlng-to-zip": "0.0.2",
     "lodash": "^4.17.15",
-    "qs": "^6.9.3",
+    "qs": "^6.9.7",
     "react": "16.11.0",
     "react-dom": "16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.0.tar.gz",
